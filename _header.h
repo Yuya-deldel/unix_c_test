@@ -12,7 +12,7 @@
 #define min(a, b)   ((a) < (b) ? (a) : (b))
 #define max(a, b)   ((a) > (b) ? (a) : (b))
 
-// _error.c
+// error_lib.c
 void err_dump(const char *, ...);   // syscall に関連する; abort 終了
 void err_msg(const char *, ...);    // syscall に関連しない; 通常終了
 void err_quit(const char *, ...);   // syscall に関連しない; エラー終了
