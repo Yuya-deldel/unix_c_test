@@ -22,7 +22,7 @@ static int openmax = 0;
 
 // path 名用のメモリ領域を確保 (+ size を更新)
 // PATH_MAX が定義されていなければ処理する
-char *path_alloc(int *size) {   // nonnull の場合 size の値も更新する
+char *path_alloc(size_t *size) {   // nonnull の場合 size の値も更新する
     char *ptr; 
     if (pathmax == 0) {     // PATH_MAX が未設定
         errno = 0;

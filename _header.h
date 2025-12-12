@@ -20,6 +20,6 @@ void err_ret(const char *, ...);    // syscall に関連する; 通常終了
 void err_sys(const char *, ...);    // syscall に関連する; エラー終了
 
 // posix_lib.c
-char *path_alloc(int *);    // path_name 用のメモリ領域を確保
+char *path_alloc(size_t *);    // path_name 用のメモリ領域を確保
 int open_max(void);         // プロセスあたりのオープン可能ファイルの最大数 (OPEN_MAX) を取得
 #endif
