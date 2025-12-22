@@ -23,3 +23,6 @@ void err_sys(const char *, ...);    // syscall に関連する; エラー終了
 char *path_alloc(size_t *);    // path_name 用のメモリ領域を確保
 int open_max(void);         // プロセスあたりのオープン可能ファイルの最大数 (OPEN_MAX) を取得
 #endif
+
+// process_lib.c 
+void pr_exit(int);      // 終了状態を表示
