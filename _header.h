@@ -26,3 +26,7 @@ int open_max(void);         // プロセスあたりのオープン可能ファ�
 
 // process_lib.c 
 void pr_exit(int);      // 終了状態を表示
+void pr_mask(const char *)
+
+// signal
+typedef void Sigfunc(int);
