@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <signal.h>
 #include <setjmp.h>
 #include <time.h>
@@ -22,7 +23,7 @@ static void sig_usr1(int signo) {
     pr_mask("finishing sig_usr1: ");
     
     canjump = 0;
-    siglongjmp(jmp_buf, 1);
+    siglongjmp(jmpbuf, 1);
 }
 
 static void sig_alarm(int signo) {

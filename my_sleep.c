@@ -1,8 +1,12 @@
+#define _GNU_SOURCE
 #include <setjmp.h>
 #include <signal.h>
+#include <stddef.h>
 #include <unistd.h>
 #include "_header.h"
 
+// alarm() とのレースコンディションがあるため、信頼性のない実装
+/*
 static void sig_alarm(int signo) {
     return;     // なにもせず、 pause から覚める
 }
@@ -33,9 +37,10 @@ unsigned int sleep2(unsigned int nsecs) {
     }
 
     return (alarm(0));
-}
+} */
 
 // test //////////////////
+/*
 static void sig_int(int signo) {
     volatile int j;
 
@@ -57,4 +62,39 @@ int main(void) {
     printf("sleep2 returned: %u\n", unslept);
 
     exit(0);
+} */
+
+static void sig_alarm(void) {
+    return;     // do nothing
+}
+
+unsigned int sleep1(unsigned int nsecs) {
+    struct sigaction newact, oldact;
+    sigset_t newmask, oldmask, suspmask;
+    unsigned int unslept;
+
+    // ハンドラ設定 + 以前の状態保管
+    newact.sa_handler = sig_alarm;
+    sigemptyset(&newact.sa_mask);
+    newact.sa_flags = 0;
+    sigaction(SIGALRM, &newact, &oldact);
+    
+    // マスク設定 + 以前の状態保管
+    sigemptyset(&newmask);
+    sigaddset(&newmask, SIGALRM);
+    sigprocmask(SIG_BLOCK, &newmask, &oldmask);     // SIGALRM はブロック
+
+    alarm(nsecs);
+    
+    // シグナルを受信するために待機
+    suspmask = oldmask;
+    sigdelset(&suspmask, SIGALRM);      // SIGALRM が確実にブロックされないようにする
+    sigsuspend(&suspmask);      // シグナルが来るまで待機
+
+    // 後処理
+    unslept = alarm(0);     // アラーム解除: unslept は残り時間
+    sigaction(SIGALRM, &oldact, NULL);          // 状態復元
+    sigprocmask(SIG_SETMASK, &oldmask, NULL);
+
+    return unslept;
 }
