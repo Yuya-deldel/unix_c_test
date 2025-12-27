@@ -35,6 +35,13 @@ void clr_fl(int, int);
 // signal
 typedef void Sigfunc(int);
 
+// tell_wait_lib.c
+void tell_wait(void);
+void tell_parent(pid_t);
+void wait_parent(void);
+void tell_child(pid_t);
+void wait_child(void);
+
 // my_terms_lib.c
 int isatty(int);
 char *ttyname(int);
@@ -45,3 +52,15 @@ int tty_raw(int);
 int tty_reset(int);
 void tty_atexit(void);
 struct termios *tty_termios(void);
+
+// lock_lib.c 
+int lock_leg(int, int, int, off_t, int, off_t);
+#define read_lock(fd, offset, whence, len)      lock_leg(fd, F_SETLK, F_RDLCK, offset, whence, len)
+#define readw_lock(fd, offset, whence, len)     lock_leg(fd, F_SETLKW, F_RDLCK, offset, whence, len)
+#define write_lock(fd, offset, whence, len)     lock_leg(fd, F_SETLK, F_WRLCK, offset, whence, len)
+#define writew_lock(fd, offset, whence, len)    lock_leg(fd, F_SETLKW, F_WRLCK, offset, whence, len)
+#define un_lock(fd, offset, whence, len)        lock_leg(fd, F_SETLK, F_UNLCK, offset, whence, len)
+
+pid_t lock_test(int, int, off_t, int, off_t);
+#define is_readlock(fd, offset, whence, len)    lock_test(fd, F_RDLCK, offset, whence, len)
+#define is_writelock(fd, offset, whence, len)   lock_test(fd, F_WRLCK, offset, whence, len)
