@@ -28,5 +28,20 @@ int open_max(void);         // プロセスあたりのオープン可能ファ�
 void pr_exit(int);      // 終了状態を表示
 void pr_mask(const char *);
 
+// fd_flag_lib.c
+void set_fl(int, int);
+void clr_fl(int, int);
+
 // signal
 typedef void Sigfunc(int);
+
+// my_terms_lib.c
+int isatty(int);
+char *ttyname(int);
+
+// tty_lib.c 
+int tty_cbreak(int);
+int tty_raw(int);
+int tty_reset(int);
+void tty_atexit(void);
+struct termios *tty_termios(void);
